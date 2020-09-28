@@ -10,13 +10,14 @@ public class Circle extends Shape {
     
     private int radius;
     private Point point;
-
+    //This is a test
     //CONSTRUCTORS
     public Circle(String name,int radius, Point newPoint ) {
         super(name);
         this.radius = radius;
         this.point = newPoint;
     }
+    
     
     //GETTERS-SETTERS
 
