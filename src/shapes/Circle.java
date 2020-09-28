@@ -11,6 +11,7 @@ public class Circle extends Shape {
     private int radius;
     private Point point;
     //This is a test
+    //SECOND TEST!
     //CONSTRUCTORS
     public Circle(String name,int radius, Point newPoint ) {
         super(name);
