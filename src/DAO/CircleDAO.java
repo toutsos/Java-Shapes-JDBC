@@ -43,7 +43,7 @@ public class CircleDAO {
         pstm.executeUpdate();
         Point newPoint = new Point(x,y);
         Circle newCircle = new Circle(name, radius, newPoint);
-       shapes.add(newCircle);
+        shapes.add(newCircle);
     }//insertSquare
     
     public static void deleteSquare(Connection con,String name)throws SQLException{

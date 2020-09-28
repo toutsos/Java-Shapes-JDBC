@@ -1,7 +1,9 @@
 package shapesProject;
 
+import DAO.CircleDAO;
 import DAO.Connect;
 import DAO.SquareDAO;
+import DAO.TriangleDAO;
 import shapes.Point;
 import shapes.Triangle;
 import shapes.Circle;
@@ -43,7 +45,7 @@ public class ShapesProject {
         while (firstMenu != 4) {
             try {
                 System.out.println("---------------------------------------");
-                System.out.println("To see all shapes press 1");
+                System.out.println("To LOAD from DB and VIEW all shapes press 1");
                 System.out.println("To create new shape press 2");
                 System.out.println("To write shapes into txt file press 3");
                 System.out.println("To sort shapes press 4");
@@ -73,7 +75,10 @@ public class ShapesProject {
     }//firstMenu
 
     public void showAllShapes(ArrayList<Shape> shapes,Connection con) throws SQLException {
+        shapes.removeAll(shapes);
         SquareDAO.selectSquares(con,shapes);
+        CircleDAO.selectCircles(con, shapes);
+        TriangleDAO.selectTriangles(con, shapes);
         if (shapes.size() != 0) {
             System.out.println("We have: " + shapes.size() + " shapes saved!");
         }//if
@@ -100,7 +105,7 @@ public class ShapesProject {
                     createSquare(con,keys);
                     break;
                 } else if (secondMenu == 2) {
-                    createTriangle(keys);
+                    createTriangle(keys,con);
                     break;
                 } else if (secondMenu == 3) {
                     createCircle(keys);
@@ -148,7 +153,7 @@ public class ShapesProject {
         }//try-catch  
     }//createSquare
 
-    public void createTriangle(Scanner keys) {
+    public void createTriangle(Scanner keys, Connection con) throws SQLException{
         try {
             int base = 0;
             int sideA = 0;
@@ -197,8 +202,9 @@ public class ShapesProject {
                     keys.next();
                 }//else
             }//while
-            Triangle newTriangle = new Triangle(name, base, sideA, sideB, height);
-            shapes.add(newTriangle);
+            TriangleDAO.insertTriangle(con, shapes, name, base, sideA, sideB, height);
+//            Triangle newTriangle = new Triangle(name, base, sideA, sideB, height);
+//            shapes.add(newTriangle);
             Shape.count++;
             System.out.println("Triangle added!");
         } catch (InputMismatchException e) {
@@ -206,7 +212,7 @@ public class ShapesProject {
         }//try-catch
     }//createTriangle   
 
-    public void createCircle(Scanner keys) {
+    public void createCircle(Scanner keys,Connection con) throws SQLException {
         try {
             int radius = 0;
             int xPoint = 0;
@@ -244,9 +250,10 @@ public class ShapesProject {
                     keys.next();
                 }//else
             }//while
-            Point newPoint = new Point(xPoint, yPoint);
-            Circle newCircle = new Circle(name, radius, newPoint);
-            shapes.add(newCircle);
+            CircleDAO.insertCircle(con, shapes, name, radius, xPoint, yPoint);
+//            Point newPoint = new Point(xPoint, yPoint);
+//            Circle newCircle = new Circle(name, radius, newPoint);
+//            shapes.add(newCircle);
             Shape.count++;
             System.out.println("Circle added!");
         } catch (InputMismatchException e) {

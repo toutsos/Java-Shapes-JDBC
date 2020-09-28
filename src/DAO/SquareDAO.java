@@ -37,7 +37,7 @@ public class SquareDAO {
         pstm.setInt(2, side);
         pstm.executeUpdate();
         Square newSquare = new Square(name, side);
-        //shapes.add(newSquare);
+        shapes.add(newSquare);
     }//insertSquare
     
     public static void deleteSquare(Connection con,String name)throws SQLException{
