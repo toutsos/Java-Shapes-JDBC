@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DB;
+package DAO;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,7 +15,7 @@ import java.sql.Connection;
 public class Connect {
     static Connection con;   
     
-    public static void connectionOpen()throws ClassNotFoundException,SQLException,InstantiationException,IllegalAccessException{
+    public static Connection connectionOpen()throws ClassNotFoundException,SQLException,InstantiationException,IllegalAccessException{
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shapes?useSSL=false", "root", "root"); 
             if(con!=null){
                 System.out.println("Connected to database");
@@ -23,7 +23,15 @@ public class Connect {
             }else{
                 System.out.println("Failed to connect to database");
             } 
+            return con;
     }
+    
+    public static void connectionClose(Connection con){
+        try {
+            con.close();
+        } catch (Exception e) {
+        }//try-catch
+    }//con close
     
     
 }//main

@@ -1,11 +1,13 @@
 package shapesProject;
 
-import DB.Connect;
+import DAO.Connect;
+import DAO.SquareDAO;
 import shapes.Point;
 import shapes.Triangle;
 import shapes.Circle;
 import shapes.Square;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,27 +18,27 @@ import java.util.TreeSet;
 
 public class ShapesProject {
     
-    private ArrayList<Shape> shapes = new ArrayList<>();
+    private static ArrayList<Shape> shapes = new ArrayList<>();
     private Comparators sortArea = new Comparators(shapes);
 
     public static void main(String[] args) {
         Shape.count=0;
         Scanner keys = new Scanner(System.in);
         ShapesProject newApp = new ShapesProject();
-        
         try {       //open connection to DB
-            Connect.connectionOpen();
-            newApp.firstMenu(keys);
+            Connection con=Connect.connectionOpen();
+            newApp.firstMenu(keys,con);
+            //SquareDAO.insertSquare(con,shapes,"s1", 2);
+            Connect.connectionClose(con);
         } catch (Exception e) {
             System.out.println(e);                  
         }//try - catch
         
-
         keys.close(); 
     }//main
 
     
-    public void firstMenu(Scanner keys) {
+    public void firstMenu(Scanner keys,Connection con) throws SQLException {
         int firstMenu = 0;
         while (firstMenu != 4) {
             try {
@@ -49,15 +51,15 @@ public class ShapesProject {
                 System.out.println("---------------------------------------");
                 firstMenu = keys.nextInt();
                 if (firstMenu == 1) {
-                    showAllShapes(shapes);
+                    showAllShapes(shapes,con);
                 } else if (firstMenu == 2) {
-                    secondMenu(keys);
+                    secondMenu(keys,con);
                 } else if (firstMenu == 3) {
                     createFile();
                 } else if (firstMenu == 5) {
                     break;
                 }else if(firstMenu == 4){
-                    sortMenu(keys);
+                    sortMenu(keys,con);
                 } else {
                     System.out.println("Wrong number please, try again!");
                     firstMenu = keys.nextInt();
@@ -70,9 +72,10 @@ public class ShapesProject {
         }//while
     }//firstMenu
 
-    public void showAllShapes(ArrayList<Shape> shapes) {
+    public void showAllShapes(ArrayList<Shape> shapes,Connection con) throws SQLException {
+        SquareDAO.selectSquares(con,shapes);
         if (shapes.size() != 0) {
-            System.out.println("We have: " + Shape.count + " shapes saved!");
+            System.out.println("We have: " + shapes.size() + " shapes saved!");
         }//if
         for (int i = 0; i < shapes.size(); i++) {
             System.out.println(shapes.get(i).toString());
@@ -82,7 +85,7 @@ public class ShapesProject {
         }//if
     }//showAllShapes
 
-    public void secondMenu(Scanner keys) {
+    public void secondMenu(Scanner keys,Connection con) throws SQLException {
         int secondMenu = 0;
         while (secondMenu != 4) {
             try {
@@ -94,7 +97,7 @@ public class ShapesProject {
                 System.out.println("---------------------------------------");
                 secondMenu = keys.nextInt();
                 if (secondMenu == 1) {
-                    createSquare(keys);
+                    createSquare(con,keys);
                     break;
                 } else if (secondMenu == 2) {
                     createTriangle(keys);
@@ -116,7 +119,7 @@ public class ShapesProject {
         }//while
     }//secondMenu
 
-    public void createSquare(Scanner keys) {
+    public void createSquare(Connection con,Scanner keys) throws SQLException {
         try {
             System.out.println("Give me the name of your Shape");
             keys.nextLine();
@@ -125,8 +128,9 @@ public class ShapesProject {
             while (keys.hasNext()) {
                 if (keys.hasNextInt()) {
                     int side = keys.nextInt();
-                    Square newSquare = new Square(name, side);
-                    shapes.add(newSquare);
+                    SquareDAO.insertSquare(con,shapes,"s1", 2);
+                    //Square newSquare = new Square(name, side);
+                    //shapes.add(newSquare);
                     Shape.count++;
                     System.out.println("Square added!");
                     break;
@@ -263,7 +267,7 @@ public class ShapesProject {
         }//try-catch
     }//createFile
 
-    public void sortMenu(Scanner keys){
+    public void sortMenu(Scanner keys,Connection con) throws SQLException{
             int sortMenuFlag = 0;
             while (sortMenuFlag!=4){
                 try {
@@ -284,7 +288,7 @@ public class ShapesProject {
                         }//for
                         System.out.println("---------------------------------------");
                     }else if(sortMenuFlag==3){
-                        firstMenu(keys);                                                           //IS THERE A BETTER WAY????
+                        firstMenu(keys,con);                                                           //IS THERE A BETTER WAY????
     //                      return;
                     }else{
                         System.out.println("Wrong number! Try again!");
