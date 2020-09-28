@@ -33,24 +33,35 @@ public class CircleDAO {
         }//while
     }//select squares
     
-    public static void insertCircle(Connection con,ArrayList shapes,String name,int radius,int x,int y) throws SQLException {
-        String sql = "INSERT INTO circles (name,radius,x,y) VALUES (?,?,?,?)";
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setString(1, name);
-        pstm.setInt(2, radius);
-        pstm.setInt(2, x);
-        pstm.setInt(2, y);
-        pstm.executeUpdate();
-        Point newPoint = new Point(x,y);
-        Circle newCircle = new Circle(name, radius, newPoint);
-        shapes.add(newCircle);
+    public static void insertCircle(Connection con,ArrayList shapes,String name,int radius,int x,int y) {
+        try {
+            String sql = "INSERT INTO circles (name,radius,x,y) VALUES (?,?,?,?)";
+            PreparedStatement pstm = con.prepareStatement(sql);
+            pstm.setString(1, name);
+            pstm.setInt(2, radius);
+            pstm.setInt(3, x);
+            pstm.setInt(4, y);
+            pstm.executeUpdate();
+            Point newPoint = new Point(x,y);
+            Circle newCircle = new Circle(name, radius, newPoint);
+            shapes.add(newCircle);  
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
     }//insertSquare
     
-    public static void deleteSquare(Connection con,String name)throws SQLException{
-        String sql = "DELETE FROM circles WHERE name=?";
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setString(1, name);
-        pstm.executeUpdate();
+    public static void deleteCircle(Connection con,String name)throws SQLException{
+        try {
+            String sql = "DELETE FROM circles WHERE name=?";
+            PreparedStatement pstm = con.prepareStatement(sql);
+            pstm.setString(1, name);
+            pstm.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        
     }//deleteSquare
     
     

@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,21 +31,44 @@ public class SquareDAO {
         }//while
     }//select squares
     
-    public static void insertSquare(Connection con,ArrayList shapes,String name,int side) throws SQLException {
-        String sql = "INSERT INTO squares (name,side) VALUES (?,?)";
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setString(1, name);
-        pstm.setInt(2, side);
-        pstm.executeUpdate();
-        Square newSquare = new Square(name, side);
-        shapes.add(newSquare);
+    public static void insertSquare(Connection con,ArrayList shapes,String name,int side){
+        try {
+            String sql = "INSERT INTO squares (name,side) VALUES (?,?)";
+            PreparedStatement pstm = con.prepareStatement(sql);
+            pstm.setString(1, name);
+            pstm.setInt(2, side);
+            int numberOfRows = pstm.executeUpdate();
+            if(numberOfRows == 1 ){
+                System.out.println("Square added successfully!");
+                Square newSquare = new Square(name, side);
+                shapes.add(newSquare);
+            }else{
+                System.out.println("Try again with another name");
+            } 
+        } catch (SQLException e) {
+//            System.out.println("This name already exists, try a new one!");
+                System.out.println(e);
+        }
+       
+        
     }//insertSquare
     
-    public static void deleteSquare(Connection con,String name)throws SQLException{
-        String sql = "DELETE FROM squares WHERE name=?";
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setString(1, name);
-        pstm.executeUpdate();
+    public static void deleteSquare(Connection con,String name){
+        try {
+            String sql = "DELETE FROM squares WHERE name=?";
+            PreparedStatement pstm = con.prepareStatement(sql);
+            pstm.setString(1, name);
+            int number = pstm.executeUpdate();
+            if(number==1){
+                System.out.println("square deleted");
+            }else{
+                System.out.println("There is no square with that name");
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
     }//deleteSquare
    
 }//class

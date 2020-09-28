@@ -34,21 +34,36 @@ public class TriangleDAO {
         }//while
     }//select squares
     
-    public static void insertTriangle(Connection con,ArrayList shapes,String name,int base,int sideA,int sideB,int height) throws SQLException {
-        String sql = "INSERT INTO triangles (name,base,sideA,sideB,height) VALUES (?,?,?,?,?)";
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setString(1, name);
-        pstm.setInt(2, base);
-        pstm.executeUpdate();
-        Triangle newTriangle = new Triangle(name, base, sideA,sideB,height);
-        shapes.add(newTriangle);
+    public static void insertTriangle(Connection con,ArrayList shapes,String name,int base,int sideA,int sideB,int height){
+        try {
+            String sql = "INSERT INTO triangles (name,base,sideA,sideB,height) VALUES (?,?,?,?,?)";
+            PreparedStatement pstm = con.prepareStatement(sql);
+            pstm.setString(1, name);
+            pstm.setInt(2, base);
+            pstm.setInt(3, sideA);
+            pstm.setInt(4, sideB);
+            pstm.setInt(5, height);
+            pstm.executeUpdate();
+            Triangle newTriangle = new Triangle(name, base, sideA,sideB,height);
+            shapes.add(newTriangle);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
     }//insertSquare
     
-    public static void deleteTriangle(Connection con,String name)throws SQLException{
-        String sql = "DELETE FROM triangles WHERE name=?";
-        PreparedStatement pstm = con.prepareStatement(sql);
-        pstm.setString(1, name);
-        pstm.executeUpdate();
+    public static void deleteTriangle(Connection con,String name){
+        try {
+            String sql = "DELETE FROM triangles WHERE name=?";
+            PreparedStatement pstm = con.prepareStatement(sql);
+            pstm.setString(1, name);
+            pstm.executeUpdate();
+            
+        } catch (Exception e) {
+            
+            System.out.println(e);
+        }
+        
     }//deleteSquare
     
 }//class

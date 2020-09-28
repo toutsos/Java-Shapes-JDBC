@@ -4,19 +4,13 @@ import DAO.CircleDAO;
 import DAO.Connect;
 import DAO.SquareDAO;
 import DAO.TriangleDAO;
-import shapes.Point;
-import shapes.Triangle;
-import shapes.Circle;
-import shapes.Square;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.TreeSet;
 
 public class ShapesProject {
     
@@ -27,15 +21,13 @@ public class ShapesProject {
         Shape.count=0;
         Scanner keys = new Scanner(System.in);
         ShapesProject newApp = new ShapesProject();
-        try {       //open connection to DB
+        try {                                   //open connection to DB
             Connection con=Connect.connectionOpen();
             newApp.firstMenu(keys,con);
-            //SquareDAO.insertSquare(con,shapes,"s1", 2);
             Connect.connectionClose(con);
         } catch (Exception e) {
             System.out.println(e);                  
         }//try - catch
-        
         keys.close(); 
     }//main
 
@@ -49,7 +41,8 @@ public class ShapesProject {
                 System.out.println("To create new shape press 2");
                 System.out.println("To write shapes into txt file press 3");
                 System.out.println("To sort shapes press 4");
-                System.out.println("To exit press 5");
+                System.out.println("To delete shapes press 5");
+                System.out.println("To exit press 6");
                 System.out.println("---------------------------------------");
                 firstMenu = keys.nextInt();
                 if (firstMenu == 1) {
@@ -58,11 +51,13 @@ public class ShapesProject {
                     secondMenu(keys,con);
                 } else if (firstMenu == 3) {
                     createFile();
-                } else if (firstMenu == 5) {
+                } else if (firstMenu == 6) {
                     break;
                 }else if(firstMenu == 4){
                     sortMenu(keys,con);
-                } else {
+                }else if(firstMenu == 5){
+                    secondMenuDelete(keys,con);
+                }else {
                     System.out.println("Wrong number please, try again!");
                     firstMenu = keys.nextInt();
                 }//else
@@ -133,11 +128,10 @@ public class ShapesProject {
             while (keys.hasNext()) {
                 if (keys.hasNextInt()) {
                     int side = keys.nextInt();
-                    SquareDAO.insertSquare(con,shapes,"s1", 2);
+                    SquareDAO.insertSquare(con,shapes,name,side);
                     //Square newSquare = new Square(name, side);
                     //shapes.add(newSquare);
                     Shape.count++;
-                    System.out.println("Square added!");
                     break;
                 } else {
                     System.out.println("We need an integer!, try again!");
@@ -308,9 +302,49 @@ public class ShapesProject {
                     keys.next();
                     System.out.println("---------------------------------------");
                 }//try-catch
-            }//while 
+            }//while
+    }//sort
     
-    }
+    public void secondMenuDelete(Scanner keys,Connection con) throws SQLException {
+        int secondMenu = 0;
+        while (secondMenu != 4) {
+            try {
+                System.out.println("---------------------------------------");
+                System.out.println("To delete Square press 1");
+                System.out.println("To delete Triangle press 2");
+                System.out.println("To delete Circle press 3");
+                System.out.println("To return press 4");
+                System.out.println("---------------------------------------");
+                secondMenu = keys.nextInt();
+                if (secondMenu == 1) {
+                    System.out.println("Give me tha name of the Square you want to delete");
+                    String deletedName = keys.next();
+                    SquareDAO.deleteSquare(con,deletedName);
+                    break;
+                } else if (secondMenu == 2) {
+                    System.out.println("Give me tha name of the Triangle you want to delete");
+                    String deletedName = keys.next();
+                    TriangleDAO.deleteTriangle(con,deletedName);
+                    break;
+                } else if (secondMenu == 3) {
+                    System.out.println("Give me tha name of the Circle you want to delete");
+                    String deletedName = keys.next();
+                    CircleDAO.deleteCircle(con,deletedName);
+                    break;
+                } else if (secondMenu == 4) {
+                    continue;
+                } else {
+                    System.out.println("Wrong number please, try again!");
+                    secondMenu = keys.nextInt();
+                }//else
+            } catch (InputMismatchException e) {
+                System.out.println("Only numbers allowed!");
+                System.out.println("Try again!");
+                keys.next();
+            }//try-catch
+        }//while
+    }//secondMenu
     
     
+  
 }//class
