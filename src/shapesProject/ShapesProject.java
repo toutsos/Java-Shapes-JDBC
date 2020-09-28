@@ -108,7 +108,7 @@ public class ShapesProject {
                     createTriangle(keys,con);
                     break;
                 } else if (secondMenu == 3) {
-                    createCircle(keys);
+                    createCircle(keys,con);
                     break;
                 } else if (secondMenu == 4) {
                     continue;
