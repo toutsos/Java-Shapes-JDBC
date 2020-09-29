@@ -23,6 +23,7 @@ public class ShapesProject {
         ShapesProject newApp = new ShapesProject();
         try {                                   //open connection to DB
             Connection con=Connect.connectionOpen();
+            
             newApp.firstMenu(keys,con);
             Connect.connectionClose(con);
         } catch (Exception e) {
@@ -37,7 +38,7 @@ public class ShapesProject {
         while (firstMenu != 4) {
             try {
                 System.out.println("---------------------------------------");
-                System.out.println("To LOAD from DB and VIEW all shapes press 1");
+                System.out.println("To VIEW all shapes press 1 ");
                 System.out.println("To create new shape press 2");
                 System.out.println("To write shapes into txt file press 3");
                 System.out.println("To sort shapes press 4");
