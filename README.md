@@ -1,0 +1,2 @@
+# Shapes
+Simple Java Project
